@@ -1,7 +1,7 @@
 # PSP Video Converter
 Небольшой Python-скрипт для автоматической конвертации видеофайлов в формат, совместимый с PlayStation Portable (PSP), с генерацией миниатюр. Поддерживает все модели PSP, включая режим TV-выхода.
 
-[Русский](video_converter.md) | [English](video_converter_EN.md)
+[Русский](README.md) | [English](README_EN.md)
 
 ## Возможности
 - Конвертация всех видео из `input_videos` в `.mp4`, совместимый с PSP

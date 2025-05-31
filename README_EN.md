@@ -1,9 +1,9 @@
 # PSPToolbox
 
-Русский | [English](README_EN.md)
+[Русский](README.md) | [English](README_EN.md)  
 
 ## Tools I've Created:
-1. [video\_converter](video_converter/video_converter.md) – a script for converting any video into a format 
+1. [video\_converter](video_converter/README) – a script for converting any video into a format 
 supported by the PSP.
 
 ## Recommended Plugins
@@ -11,5 +11,5 @@ supported by the PSP.
    [Installation Guide](https://www.pspunk.com/game-categories-lite/)
 
 > [!NOTE]  
-> The 8-category limit applies ONLY in folder mode. In other modes, you can create and use as many categories as you like.
+> The 8-category limit applies ONLY in folder mode. In other modes, you can create and use as many categories as you like.  
 > This is mentioned in several places, but it's not as obvious as it should be.

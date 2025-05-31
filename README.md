@@ -1,9 +1,9 @@
 # PSPToolbox  
 
-Русский | [English](README_EN.md)  
+[Русский](README.md) | [English](README_EN.md)  
 
 ## Написанные мной инструменты:  
-1. [video_converter](video_converter/video_converter.md) – это скрипт для конвертации любого видео в формат, 
+1. [video_converter](video_converter/README) – это скрипт для конвертации любого видео в формат, 
 поддерживаемый PSP.
 
 ## Рекомендуемые плагины
