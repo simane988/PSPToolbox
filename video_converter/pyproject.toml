@@ -1,0 +1,17 @@
+[project]
+name = "PSPToolbox_video_converter"
+version = "0.1.0"
+description = "Small tool to convert any video to PSP"
+package-mode = false
+authors = [
+    {name = "simane988",email = "simane988@gmail.com"}
+]
+requires-python = ">=3.12"
+dependencies = [
+    "ffmpeg-python (>=0.2.0,<0.3.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
