@@ -10,7 +10,7 @@ ffmpeg -i "{input_path}" \
 -c:v libx264 -s {resolution} -crf {crf} \
 -x264-params me=-x264-params:me=rc-lookahead=10:bframes=16:b-pyramid=none:weightp=0:me=umh:subme=11:8x8dct=0 \
 -c:a aac -b:a {bitrate_audio} -ar {hertz_audio} -ac 2 \
--f psp -strict -2 \
+-f psp -strict -2 -vf format=yuv420p \
 "{output_path}"
 """)
     print(out.read())

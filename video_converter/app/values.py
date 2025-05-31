@@ -2,7 +2,7 @@ import os
 
 # Detect PSP version and using TV
 psp_model = os.getenv("PSP_MODEL", "1000").strip()
-tv_out = os.getenv("TV_OUT", "false").lower()
+tv_out = os.getenv("TV_OUT", "false").lower() == "true"
 
 # Default settings for each version of PSP
 default_profiles = {
