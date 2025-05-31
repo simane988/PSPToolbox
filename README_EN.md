@@ -10,6 +10,6 @@ supported by the PSP.
 1. [Game Categories Lite](https://github.com/ticky/game-categories-lite)
    [Installation Guide](https://www.pspunk.com/game-categories-lite/)
 
-> [!Important Detail]  
+> [!NOTE]  
 > The 8-category limit applies ONLY in folder mode. In other modes, you can create and use as many categories as you like.
 > This is mentioned in several places, but it's not as obvious as it should be.
