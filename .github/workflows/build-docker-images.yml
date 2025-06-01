@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Go to video_converter dir
-      run: cd video_converter
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag psp_video_converter:$(date +%s)
+      run: |
+        cd video_converter
+        docker build . --file Dockerfile --tag psp_video_converter:$(date +%s)
