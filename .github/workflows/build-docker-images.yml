@@ -1,12 +1,13 @@
 name: Rebuild all Docker images
 
-on:
-  push:
+on: push
 
 jobs:
   build_video_converter:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Go to video_converter dir
+      run: cd video_converter
     - name: Build the Docker image
-      run: docker build . --file video_converter/Dockerfile --tag psp_video_converter:$(date +%s)
+      run: docker build . --file Dockerfile --tag psp_video_converter:$(date +%s)
