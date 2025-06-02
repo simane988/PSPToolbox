@@ -1,13 +1,15 @@
-name: Rebuild all Docker images
+name: Staging Rebuild all Docker images
 
 on: push
 
 jobs:
-  build_video_converter:
+  build_dockerfiles:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app_name: [video_converter, not_exist]
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: |
-        cd video_converter
-        docker build . --file Dockerfile --tag psp_video_converter:$(date +%s)
+      working-directory: ${{ matrix.app_name }}
+      run: docker build . --file Dockerfile --tag psp_${{ matrix.app_name }}:$(date +%s)
