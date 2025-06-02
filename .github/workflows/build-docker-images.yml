@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        app_name: [video_converter, not_exist]
+        app_name: [video_converter]
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
