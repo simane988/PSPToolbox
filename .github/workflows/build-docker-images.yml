@@ -8,6 +8,9 @@ jobs:
     strategy:
       matrix:
         app_name: [video_converter]
+    permissions:
+      contents: read
+      packages: write
     steps:
     - uses: actions/checkout@v4
     - name: Set short git commit SHA
