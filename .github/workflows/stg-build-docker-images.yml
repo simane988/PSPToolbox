@@ -1,4 +1,4 @@
-name: Build and publish projects images
+name: Staging build and publish projects images
 
 on: push
 
@@ -13,20 +13,13 @@ jobs:
       packages: write
     steps:
     - uses: actions/checkout@v4
-    - name: Set short git commit SHA
+    - name: Extract branch name
       id: vars
-      run: |
-       calculatedSha=$(git rev-parse --short ${{ github.sha }})
-       echo "COMMIT_SHORT_SHA=$calculatedSha"
-       echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-    # - name: Build the Docker image
-    #   continue-on-error: true
-    #   working-directory: ${{ matrix.app_name }}
-    #   run: docker build . --file Dockerfile --tag psp_${{ matrix.app_name }}:$(date +%s)
+      run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
     - name: Build and publish a Docker image for ${{ github.repository }}
       uses: macbre/push-to-ghcr@master
       with:
         dockerfile: ${{ matrix.app_name }}/Dockerfile
         image_name: ${{ github.repository }}_videoconverter  # it will be lowercased internally
-        image_tag: ${{ env.COMMIT_SHORT_SHA }}
+        image_tag: ${{ env.BRANCH }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
