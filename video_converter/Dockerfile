@@ -1,7 +1,7 @@
 FROM python:3.13-alpine
 LABEL authors="simane988"
 
-# SOME ENVS
+# ENVS
 ENV POETRY_VIRTUALENVS_CREATE=false
 
 # Install poetry
