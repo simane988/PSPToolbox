@@ -26,7 +26,7 @@ jobs:
     - name: Build dockerfile for ${{ matrix.app_name }}
       uses: docker/build-push-action@v6
       with:
-        file:: ${{ matrix.app_name }}/Dockerfile
+        file: ${{ matrix.app_name }}/Dockerfile
         push: false
         tags: ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
         outputs: type=docker,dest=${{ runner.temp }}/${{ github.repository }}_${{ matrix.app_name }}.tar 
