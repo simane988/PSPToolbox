@@ -23,7 +23,7 @@ jobs:
     - name: Build and publish a Docker image for ${{ github.repository }}
       uses: macbre/push-to-ghcr@master
       with:
-        working-directory: ${{ matrix.app_name }}
+        context: ${{ matrix.app_name }}
         image_name: ${{ github.repository }}_videoconverter  # it will be lowercased internally
         image_tag: ${{ env.COMMIT_SHORT_SHA }}
         github_token: ${{ secrets.GITHUB_TOKEN }}
