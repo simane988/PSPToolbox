@@ -12,10 +12,10 @@ ENV PATH="${PATH}:/root/.poetry/bin"
 
 # Copy only poetry stuff
 WORKDIR /app
-COPY poetry.lock pyproject.toml ./
+COPY video_converter/poetry.lock video_converter/pyproject.toml ./
 
 RUN poetry install --no-interaction --no-ansi --no-root
 
-COPY app ./
+COPY video_converter/app ./
 
 ENTRYPOINT ["python3","app.py"]
