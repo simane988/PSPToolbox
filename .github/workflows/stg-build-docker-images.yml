@@ -32,7 +32,7 @@ jobs:
         push: false
         tags: ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
         load: true
-        outputs: type=docker,dest=${{ runner.temp }}/${{ github.repository }}_${{ matrix.app_name }}.tar
+        outputs: type=docker,dest=${{ runner.temp }}/${{ matrix.app_name }}.tar
     - name: Upload docker image for ${{ matrix.app_name }}
       uses: actions/upload-artifact@v4
       with:
