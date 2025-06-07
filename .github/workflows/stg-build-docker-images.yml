@@ -31,6 +31,8 @@ jobs:
         file: ${{ matrix.app_name }}/Dockerfile
         push: false
         tags: ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         load: true
         outputs: type=docker,dest=${{ runner.temp }}/${{ matrix.app_name }}.tar
     - name: Upload docker image for ${{ matrix.app_name }}
