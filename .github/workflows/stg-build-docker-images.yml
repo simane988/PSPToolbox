@@ -1,8 +1,28 @@
 name: Staging build and publish projects images
 
-on: push
+on:
+  push:
+    branches:
+      - 'release/*'
 
 jobs:
+  pre-build:
+    name: Pre-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Extract branch name
+        id: vars
+        run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/release')
+        run: gh pr create -B master -H ${{ env.BRANCH }} --title 'Merge ${{ env.BRANCH }} into master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     name: Build Images
     runs-on: ubuntu-latest
@@ -10,27 +30,27 @@ jobs:
       matrix:
         app_name: [video_converter]
     steps:
-    - uses: actions/checkout@v4
-    - name: Extract branch name
-      id: vars
-      run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-    - name: Build dockerfile for ${{ matrix.app_name }}
-      uses: docker/build-push-action@v6
-      with:
-        file: ${{ matrix.app_name }}/Dockerfile
-        push: false
-        tags: ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-        load: true
-        outputs: type=docker,dest=${{ runner.temp }}/${{ matrix.app_name }}.tar
-    - name: Upload docker image for ${{ matrix.app_name }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.app_name }}
-        path: ${{ runner.temp }}/${{ matrix.app_name }}.tar
+      - uses: actions/checkout@v4
+      - name: Extract branch name
+        id: vars
+        run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build dockerfile for ${{ matrix.app_name }}
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ matrix.app_name }}/Dockerfile
+          push: false
+          tags: ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
+          outputs: type=docker,dest=${{ runner.temp }}/${{ matrix.app_name }}.tar
+      - name: Upload docker image for ${{ matrix.app_name }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app_name }}
+          path: ${{ runner.temp }}/${{ matrix.app_name }}.tar
 
   scan:
     name: Scan Images
@@ -43,27 +63,27 @@ jobs:
       contents: read
       packages: write
     steps:
-    - name: Extract branch name
-      id: vars
-      run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ matrix.app_name }}
-        path: ${{ runner.temp }}
-    - name: Load image
-      run: |
-        docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
-        docker image ls -a
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@0.31.0
-      with:
-        image-ref: '${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}'
-        format: 'table'
-        exit-code: '1'
-        ignore-unfixed: true
-        vuln-type: 'os,library'
-        severity: 'CRITICAL,HIGH'
+      - name: Extract branch name
+        id: vars
+        run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app_name }}
+          path: ${{ runner.temp }}
+      - name: Load image
+        run: |
+          docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
+          docker image ls -a
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.31.0
+        with:
+          image-ref: '${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 
   publish:
     name: Publish Images
@@ -76,24 +96,24 @@ jobs:
       contents: read
       packages: write
     steps:
-    - name: 'Checkout GitHub Action'
-      uses: actions/checkout@main
-    - name: Extract branch name
-      id: vars
-      run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ${{ matrix.app_name }}
-        path: ${{ runner.temp }}
-    - name: 'Login to GitHub Container Registry'
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{github.actor}}
-        password: ${{secrets.GITHUB_TOKEN}}
-    - name: 'Push image to GitHub Container Registry'
-      run: |
-        docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
-        docker tag ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }} ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
-        docker push ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+      - name: Extract branch name
+        id: vars
+        run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app_name }}
+          path: ${{ runner.temp }}
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: 'Push image to GitHub Container Registry'
+        run: |
+          docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
+          docker tag ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }} ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
+          docker push ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
