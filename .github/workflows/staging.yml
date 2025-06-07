@@ -17,7 +17,7 @@ jobs:
         id: vars
         run: echo "BRANCH=$(echo ${{ github.ref_name }} | tr '/' '-')" >> $GITHUB_ENV
       - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/release')
+        if: github.ref == 'refs/tags/release/*'
         run: gh pr create -B master -H ${{ env.BRANCH }} --title 'Merge ${{ env.BRANCH }} into master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
