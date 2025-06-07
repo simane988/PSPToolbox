@@ -1,7 +1,9 @@
 name: Staging build and publish projects images
 
 on:
-  push
+  push:
+    branches:
+        - '!master'
 
 jobs:
   pre-build:

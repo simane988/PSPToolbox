@@ -12,24 +12,19 @@ A small Python script for automatically converting video files into a format com
 
 ## Quick Start
 
-### 1. Build the Docker image:
-```bash
-docker build -t psp-converter .
-````
+### 1. Prepare folders:
+Create `input_videos` and `output_videos` folders, and place your videos into `input_videos`.
 
-### 2. Prepare folders:
-Create `input_videos` and `output_videos` folders next to the `Dockerfile`, and place your videos into `input_videos`.
-
-### 3. Run the container:
+### 2. Run the container:
 ```bash
 docker run --rm \
   -v $(pwd)/input_videos:/app/input_videos \
   -v $(pwd)/output_videos:/app/output_videos \
   -e PSP_MODEL=3000 \
-  psp-converter
+  ghcr.io/simane988/psptoolbox_video_converter:latest
 ```
 
-### 4. (Optional) Enable TV mode:
+### 3. (Optional) Enable TV mode:
 ```bash
 -e TV_OUT=true
 ```

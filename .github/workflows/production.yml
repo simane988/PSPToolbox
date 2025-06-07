@@ -1,4 +1,4 @@
-name: Staging build and publish projects images
+name: Production build and publish projects images
 
 on:
   push:

@@ -12,24 +12,19 @@
 
 ## Быстрый старт
 
-### 1. Собери Docker-образ:
-```bash
-docker build -t psp-converter .
-````
+### 1. Подготовь папки:
+Создай папки `input_videos` и `output_videos` и положи видеофайлы в `input_videos`.
 
-### 2. Подготовь папки:
-Создай папки `input_videos` и `output_videos` рядом с `Dockerfile` и положи видеофайлы в `input_videos`.
-
-### 3. Запусти контейнер:
+### 2. Запусти контейнер с готовым образом:
 ```bash
 docker run --rm \
   -v $(pwd)/input_videos:/app/input_videos \
   -v $(pwd)/output_videos:/app/output_videos \
   -e PSP_MODEL=3000 \
-  psp-converter
+  ghcr.io/simane988/psptoolbox_video_converter:latest
 ```
 
-### 4. (Опционально) Включи TV-режим:
+### 3. (Опционально) Включи TV-режим:
 ```bash
 -e TV_OUT=true
 ```
