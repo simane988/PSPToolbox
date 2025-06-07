@@ -8,23 +8,13 @@ jobs:
     strategy:
       matrix:
         app_name: [video_converter]
-    permissions:
-      contents: read
-      packages: write
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
     - name: Extract branch name
       id: vars
       run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
-    # - name: Build and publish a Docker image for ${{ github.repository }}
-    #   uses: macbre/push-to-ghcr@master
-    #   with: 
-    #     dockerfile: ${{ matrix.app_name }}/Dockerfile
-    #     image_name: ${{ github.repository }}_${{ matrix.app_name }}  # it will be lowercased internally
-    #     image_tag: ${{ env.BRANCH }}
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     - name: Build dockerfile for ${{ matrix.app_name }}
       uses: docker/build-push-action@v6
       with:
