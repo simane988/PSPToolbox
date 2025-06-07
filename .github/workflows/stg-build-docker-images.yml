@@ -93,4 +93,5 @@ jobs:
       run: |
         docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
         docker image ls -a
+        docker tag ${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }} ghcr.io/simane988/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
         docker push ghcr.io/simane988/${{ github.repository }}_${{ matrix.app_name }}:${{ env.BRANCH }}
