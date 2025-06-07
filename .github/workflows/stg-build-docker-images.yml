@@ -20,7 +20,7 @@ jobs:
       run: echo "BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_ENV
     # - name: Build and publish a Docker image for ${{ github.repository }}
     #   uses: macbre/push-to-ghcr@master
-    #   with:
+    #   with: 
     #     dockerfile: ${{ matrix.app_name }}/Dockerfile
     #     image_name: ${{ github.repository }}_${{ matrix.app_name }}  # it will be lowercased internally
     #     image_tag: ${{ env.BRANCH }}
