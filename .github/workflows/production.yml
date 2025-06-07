@@ -1,0 +1,63 @@
+name: Staging build and publish projects images
+
+on:
+  push:
+    branches:
+        - master
+
+jobs:
+  build:
+    name: Build Images
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app_name: [video_converter]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build dockerfile for ${{ matrix.app_name }}
+        uses: docker/build-push-action@v6
+        with:
+          file: ${{ matrix.app_name }}/Dockerfile
+          push: false
+          tags: ${{ github.repository }}_${{ matrix.app_name }}:master
+          load: true
+          outputs: type=docker,dest=${{ runner.temp }}/${{ matrix.app_name }}.tar
+      - name: Upload docker image for ${{ matrix.app_name }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app_name }}
+          path: ${{ runner.temp }}/${{ matrix.app_name }}.tar
+
+  publish:
+    name: Publish Images
+    runs-on: ubuntu-latest
+    needs: build
+    strategy:
+      matrix:
+        app_name: [video_converter]
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.app_name }}
+          path: ${{ runner.temp }}
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+      - name: 'Push image to GitHub Container Registry'
+        run: |
+          docker load --input ${{ runner.temp }}/${{ matrix.app_name }}.tar
+          docker tag ${{ github.repository }}_${{ matrix.app_name }}:master ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:master
+          docker tag ${{ github.repository }}_${{ matrix.app_name }}:master ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:latest
+          docker push ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:master
+          docker push ghcr.io/${{ github.repository }}_${{ matrix.app_name }}:latest
