@@ -72,9 +72,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    defaults:
-      run:
-        working-directory: './Store'
     steps:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@main
